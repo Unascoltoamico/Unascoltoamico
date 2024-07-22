@@ -53,7 +53,7 @@ app.use(helmet({
         useDefaults: true,
         directives: {
             "default-src": ["'self'"],
-            "script-src": ["'self'", "https://cdn.socket.io", (req, res) => `'nonce-${res.locals.nonce}'`],
+            "script-src": ["'self'", "https://cdn.socket.io", (req, res) => `'nonce-${res.locals.nonce}'`, "'unsafe-inline'"],
             "style-src": ["'self'", "'unsafe-inline'"],
             "font-src": ["'self'", "https://fonts.gstatic.com"]
         }
