@@ -4,6 +4,7 @@ const socketIo = require('socket.io');
 const path = require('path');
 const helmet = require('helmet');
 const nodemailer = require('nodemailer');
+const crypto = require('crypto');
 
 const app = express();
 const server = http.createServer(app);
@@ -40,7 +41,22 @@ const sendNotificationEmail = (username) => {
     });
 };
 
-app.use(helmet());
+// Middleware per generare nonce
+app.use((req, res, next) => {
+    res.locals.nonce = crypto.randomBytes(16).toString('hex');
+    next();
+});
+
+// Configura helmet con direttive CSP personalizzate
+app.use(helmet({
+    contentSecurityPolicy: {
+        useDefaults: true,
+        directives: {
+            "script-src": ["'self'", "https://cdn.socket.io", (req, res) => `'nonce-${res.locals.nonce}'`]
+        }
+    }
+}));
+
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.get('/check-image', (req, res) => {
