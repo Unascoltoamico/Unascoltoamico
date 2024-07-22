@@ -5,8 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>La chat di un ascolto amico!</title>
     <link rel="stylesheet" href="style.css">
-    <script nonce="{{nonce}}" src="https://cdn.socket.io/4.0.1/socket.io.min.js"></script>
-    <script src="/socket.io/socket.io.js"></script>
+    <script src="https://cdn.socket.io/4.0.1/socket.io.min.js" integrity="sha384-DkkweVq9ysbC8WcYhjbh5aW7x8hXICEDo2Y5isXYn3dRTiGymsRDRr7CGd27X2Zy" crossorigin="anonymous"></script>
 </head>
 <body>
     <div id="landing-page">
@@ -24,10 +23,11 @@
     <div id="chat-container">
         <ul id="messages"></ul>
         <form id="form" action="">
-            <input id="input" autocomplete="off"><button>Invia</button>
+            <input id="input" autocomplete="off">
+            <button>Invia</button>
         </form>
         <button id="disconnect-user-button" style="display: none;">Disconnetti utenti</button>
     </div>
-    <script nonce="{{nonce}}" src="script.js"></script>
+    <script src="script.js"></script>
 </body>
 </html>
