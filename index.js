@@ -40,7 +40,16 @@ const sendNotificationEmail = (username) => {
     });
 };
 
-app.use(helmet());
+// Configura helmet con direttive CSP personalizzate
+app.use(helmet({
+    contentSecurityPolicy: {
+        useDefaults: true,
+        directives: {
+            "script-src": ["'self'", "https://cdn.socket.io"]
+        }
+    }
+}));
+
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.get('/check-image', (req, res) => {
