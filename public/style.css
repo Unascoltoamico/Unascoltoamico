@@ -1,0 +1,283 @@
+@import url('https://fonts.googleapis.com/css2?family=League+Spartan:wght@400;700&family=Helvetica+Neue:wght@400;700&display=swap');
+
+body {
+    font-family: 'League Spartan', sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    background: linear-gradient(180deg, #FF9F41, #DB6E04);
+    flex-direction: column;
+    overflow: hidden;
+}
+
+#landing-page {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    position: relative;
+}
+
+#welcome-message {
+    font-size: 48px;
+    font-weight: bold;
+    margin-bottom: 20px;
+    transition: transform 0.3s ease;
+}
+
+#welcome-message:hover {
+    transform: scale(1.1);
+}
+
+#enter-chat-button {
+    padding: 10px 20px;
+    background: #FF9F41;
+    border: none;
+    color: white;
+    font-size: 24px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: transform 0.3s ease, background-color 0.3s ease;
+}
+
+#enter-chat-button:hover {
+    background: #DB6E04;
+    transform: scale(1.1);
+}
+
+#login-container, #waiting-container, #chat-container {
+    display: none;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    width: 100%; /* Assicurati che il contenitore occupi l'intera larghezza */
+    font-family: 'Helvetica Neue', sans-serif;
+    position: relative;
+}
+
+#chat-container {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    width: 600px;
+    max-width: 100%;
+    height: 80vh;
+    flex-direction: column;
+    overflow: hidden; /* Aggiunto per prevenire overflow */
+}
+
+#messages {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column-reverse; /* Cambia l'ordine dei messaggi */
+    overflow-y: auto;
+    max-height: calc(80vh - 100px);
+    scrollbar-width: none; /* Firefox */
+}
+
+#messages::-webkit-scrollbar {
+    display: none; /* Chrome, Safari e Opera */
+}
+
+#messages li {
+    padding: 8px;
+    display: flex;
+    align-items: center;
+    font-family: 'Helvetica Neue', sans-serif;
+    max-width: 100%;
+    word-break: break-word; /* Assicura che il testo vada a capo */
+    overflow-wrap: break-word; /* Aggiungi questa linea per migliorare il wrapping del testo */
+    box-sizing: border-box; /* Assicura che il padding sia incluso nella larghezza */
+    font-size: 18px; /* Aumenta la dimensione del testo */
+}
+
+#form {
+    display: flex;
+    padding-top: 10px;
+}
+
+#input {
+    flex: 1;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    margin-right: 10px;
+    font-family: 'Helvetica Neue', sans-serif;
+    box-sizing: border-box;
+    font-size: 18px; /* Aumenta la dimensione del testo */
+}
+
+button {
+    padding: 10px;
+    background: #FF9F41;
+    border: none;
+    color: white;
+    border-radius: 4px;
+    cursor: pointer;
+    font-family: 'Helvetica Neue', sans-serif;
+    font-size: 18px; /* Aumenta la dimensione del testo */
+}
+
+button:hover {
+    background: #DB6E04;
+}
+
+.username-span {
+    margin-right: 8px; /* Aggiungi uno spazio tra nome utente e messaggio */
+}
+
+.sent .message-content {
+    background-color: #ffe6cc; /* colore arancione spento */
+    border-radius: 8px;
+    padding: 5px 10px;
+    margin-left: auto;
+    margin-right: 0; /* Elimina il margine destro */
+    max-width: 80%;
+    word-break: break-word; /* Assicura che il testo vada a capo */
+    overflow-wrap: break-word; /* Aggiungi questa linea per migliorare il wrapping del testo */
+    box-sizing: border-box;
+    width: 100%;
+    font-size: 18px; /* Aumenta la dimensione del testo */
+}
+
+.received .message-content {
+    background-color: #f0f0f0; /* colore per i messaggi ricevuti */
+    border-radius: 8px;
+    padding: 5px 10px;
+    margin-right: auto;
+    margin-left: 0; /* Elimina il margine sinistro */
+    max-width: 80%;
+    word-break: break-word; /* Assicura che il testo vada a capo */
+    overflow-wrap: break-word; /* Aggiungi questa linea per migliorare il wrapping del testo */
+    box-sizing: border-box;
+    width: 100%;
+    font-size: 18px; /* Aumenta la dimensione del testo */
+}
+
+.admin .message-content {
+    background-color: #f0f0f0; /* colore per i messaggi ricevuti dall'admin */
+    border-radius: 8px;
+    padding: 5px 10px;
+    margin-right: auto;
+    margin-left: 0; /* Elimina il margine sinistro */
+    max-width: 80%;
+    word-break: break-word; /* Assicura che il testo vada a capo */
+    overflow-wrap: break-word; /* Aggiungi questa linea per migliorare il wrapping del testo */
+    box-sizing: border-box;
+    width: 100%;
+    font-size: 18px; /* Aumenta la dimensione del testo */
+}
+
+.system-message {
+    font-style: italic;
+    color: gray;
+    text-align: center;
+    width: 100%;
+}
+
+/* Animazione per la scritta di attesa */
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+    100% { transform: scale(1); }
+}
+
+#waiting-message {
+    font-size: 30px; /* Rimpicciolito il testo */
+    animation: pulse 2s ease-in-out infinite;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    width: 100%;
+    position: absolute; /* Assicurati che copra tutto il contenitore */
+    top: 0;
+    left: 0;
+    text-align: center;
+}
+
+/* Stile per l'icona di Instagram */
+#instagram-icon {
+    position: fixed;
+    bottom: 40px;
+    right: 40px;
+    width: 40px;
+    height: 40px;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+    object-fit: contain; /* Assicura che l'immagine non venga tagliata */
+    z-index: 1000; /* Assicura che l'icona sia sopra altri elementi */
+}
+
+#instagram-icon:hover {
+    transform: scale(1.1);
+}
+
+/* Stile per l'immagine della mano */
+#mano {
+    width: 100.24%; /* Aumentato di un terzo in più */
+    height: auto;
+    position: absolute;
+    bottom: -222.24px; /* Parte fuori dallo schermo */
+    animation: hand-raise 2s forwards;
+}
+
+/* Animazione per far salire la mano */
+@keyframes hand-raise {
+    to {
+        bottom: -8px; /* Posizione finale della mano */
+    }
+}
+
+/* Media queries per adattare le dimensioni dell'immagine alle diverse risoluzioni */
+@media (min-width: 600px) {
+    #mano {
+        width: 177.79%; /* Ridimensiona per schermi più grandi */
+        bottom: -177.79px;
+    }
+}
+
+@media (min-width: 1024px) {
+    #mano {
+        width: 120.67%; /* Ridimensiona ulteriormente per schermi ancora più grandi */
+        bottom: -106.67px;
+    }
+}
+
+#disconnect-user-button {
+    margin-top: 10px;
+    padding: 10px 20px;
+    background: #FF0000;
+    border: none;
+    color: white;
+    font-size: 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: transform 0.3s ease, background-color 0.3s ease;
+    z-index: 1000; /* Assicurati che il pulsante sia in primo piano */
+    display: block; /* Aggiunto per assicurarsi che sia visibile */
+}
+
+#disconnect-user-button:hover {
+    background: #CC0000;
+    transform: scale(1.1);
+}
+
+/* Media query per schermi piccoli */
+@media (max-width: 600px) {
+    #messages li {
+        font-size: 16px; /* Riduci la dimensione del testo sui dispositivi mobili */
+    }
+
+    .message-content {
+        padding: 5px; /* Riduci il padding sui dispositivi mobili */
+    }
+}
