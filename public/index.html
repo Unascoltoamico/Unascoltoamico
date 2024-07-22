@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>La chat di un ascolto amico</title>
     <link rel="stylesheet" href="style.css">
-    <script src="https://cdn.socket.io/4.0.1/socket.io.min.js"></script>
+    <script nonce="{{nonce}}" src="https://cdn.socket.io/4.0.1/socket.io.min.js"></script>
 </head>
 <body>
     <div id="landing-page">
@@ -13,13 +13,16 @@
         <button id="enter-chat-button">Entra nella chat</button>
         <img id="mano" src="Progetto senza titolo.svg" alt="Mano che saluta">
     </div>
+
     <div id="login-container">
-        <input type="text" id="username" placeholder="Inserisci il tuo nome">
+        <input type="text" id="username" placeholder="Inserisci il tuo nome" autocomplete="username">
         <button id="login-button">Login</button>
     </div>
+
     <div id="waiting-container">
         <h1 id="waiting-message">Un ascolto amico sta arrivando!</h1>
     </div>
+
     <div id="chat-container">
         <ul id="messages"></ul>
         <form id="form" action="">
@@ -27,6 +30,7 @@
         </form>
         <button id="disconnect-user-button" style="display: none;">Disconnetti utenti</button>
     </div>
-    <script src="script.js"></script>
+
+    <script nonce="{{nonce}}" src="script.js"></script>
 </body>
 </html>

@@ -18,15 +18,15 @@ let disconnectedUsers = new Set();
 const transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
-        user: 'ascoltologin@gmail.com',
-        pass: 'vdye yosy aibt uwdn'
+        user: 'ascoltologin@gmail.com', // Cambia con il tuo indirizzo email
+        pass: 'vdye yosy aibt uwdn' // Cambia con la tua password per l'applicazione
     }
 });
 
 const sendNotificationEmail = (username) => {
     const mailOptions = {
-        from: 'ascoltologin@gmail.com',
-        to: 'ascoltologin@gmail.com',
+        from: 'ascoltologin@gmail.com', // Cambia con il tuo indirizzo email
+        to: 'ascoltologin@gmail.com', // Cambia con l'indirizzo email del destinatario
         subject: 'Nuovo login utente',
         text: `${username} ha effettuato il login`
     };
@@ -44,13 +44,13 @@ app.use(helmet());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.get('/check-image', (req, res) => {
-    res.sendFile(path.join(__dirname, 'public', 'instagram-logo.svg'));
+    res.sendFile(path.join(__dirname, 'public', 'Progetto senza titolo.svg'));
 });
 
 io.on('connection', (socket) => {
     socket.on('register', (username) => {
         if (disconnectedUsers.has(username) && (connectedUser || isAdminConnected)) {
-            socket.emit('connectionStatus', 'blocked');
+            socket.emit('connectionStatus', 'blocked'); // Blocca l'utente disconnesso se qualcuno è connesso
             return;
         }
 
@@ -65,7 +65,7 @@ io.on('connection', (socket) => {
                     io.to(connectedUser.id).emit('connectionStatus', 'connected');
                 }
             } else {
-                socket.emit('connectionStatus', 'full');
+                socket.emit('connectionStatus', 'full'); // Admin già connesso
             }
         } else {
             if (!connectedUser) {
@@ -73,10 +73,10 @@ io.on('connection', (socket) => {
                 connectedUser = socket;
                 socket.emit('connectionStatus', isAdminConnected ? 'connected' : 'waiting');
                 io.emit('chat message', { user: 'Sistema', text: `${username} è in attesa di un ascolto amico.` });
-                sendNotificationEmail(username);
+                sendNotificationEmail(username); // Invia la notifica via email
             } else {
                 waitingList.push(socket);
-                socket.emit('connectionStatus', 'waiting');
+                socket.emit('connectionStatus', 'waiting'); // Utente in attesa
             }
         }
     });
@@ -98,11 +98,11 @@ io.on('connection', (socket) => {
                 isAdminConnected = false;
                 io.emit('chat message', { user: 'Chat', text: 'Un ascolto amico è uscito dalla chat.' });
                 if (connectedUser) {
-                    io.to(connectedUser.id).emit('connectionStatus', 'waiting');
+                    io.to(connectedUser.id).emit('connectionStatus', 'waiting'); // Metti l'utente in attesa
                 }
             } else {
                 io.emit('userDisconnected', `${socket.username} si è disconnesso`);
-                disconnectedUsers.add(socket.username);
+                disconnectedUsers.add(socket.username);  // Aggiungi il nome utente disconnesso al set
                 if (connectedUser && connectedUser.id === socket.id) {
                     connectedUser = null;
                     processNextUserInQueue();
@@ -122,19 +122,22 @@ io.on('connection', (socket) => {
     };
 
     const disconnectAllUsersExceptAdmin = () => {
+        // Disconnetti l'utente connesso
         if (connectedUser) {
             io.to(connectedUser.id).emit('redirectToWaiting');
             io.emit('userDisconnected', `${connectedUser.username} si è disconnesso`);
-            disconnectedUsers.add(connectedUser.username);
+            disconnectedUsers.add(connectedUser.username);  // Aggiungi il nome utente disconnesso al set
             connectedUser.disconnect(true);
             connectedUser = null;
         }
+        // Disconnetti gli utenti in lista d'attesa
         waitingList.forEach(user => {
             io.to(user.id).emit('redirectToWaiting');
-            disconnectedUsers.add(user.username);
+            disconnectedUsers.add(user.username);  // Aggiungi il nome utente disconnesso al set
             user.disconnect(true);
         });
         waitingList = [];
+        // Non disconnettiamo l'amministratore
         io.emit('chat message', { user: 'Sistema', text: 'Tutti gli utenti sono stati disconnessi.' });
     };
 });
