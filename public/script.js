@@ -129,6 +129,8 @@ socket.on('userNotification', (msg) => {
     }
 });
 
+
+
 socket.on('userLeft', () => {
     if (waitingContainer.style.display === 'flex') {
         waitingContainer.style.display = 'none';
@@ -141,3 +143,4 @@ socket.on('redirectToWaiting', () => {
     waitingContainer.style.display = 'flex';
     loginContainer.style.display = 'none';
 });
+
