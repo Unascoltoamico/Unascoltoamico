@@ -4,7 +4,6 @@ const socketIo = require('socket.io');
 const path = require('path');
 const helmet = require('helmet');
 const nodemailer = require('nodemailer');
-const crypto = require('crypto');
 
 const app = express();
 const server = http.createServer(app);
@@ -13,21 +12,21 @@ const io = socketIo(server);
 let connectedUser = null;
 let isAdminConnected = false;
 let waitingList = [];
-let disconnectedUsers = new Set();  // Set per tenere traccia degli utenti disconnessi
+let disconnectedUsers = new Set();
 
 // Configura nodemailer
 const transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
-        user: 'ascoltologin@gmail.com', // Cambia con il tuo indirizzo email
-        pass: 'vdye yosy aibt uwdn' // Cambia con la tua password per l'applicazione
+        user: 'ascoltologin@gmail.com',
+        pass: 'vdye yosy aibt uwdn'
     }
 });
 
 const sendNotificationEmail = (username) => {
     const mailOptions = {
-        from: 'ascoltologin@gmail.com', // Cambia con il tuo indirizzo email
-        to: 'ascoltologin@gmail.com', // Cambia con l'indirizzo email del destinatario
+        from: 'ascoltologin@gmail.com',
+        to: 'ascoltologin@gmail.com',
         subject: 'Nuovo login utente',
         text: `${username} ha effettuato il login`
     };
@@ -41,32 +40,8 @@ const sendNotificationEmail = (username) => {
     });
 };
 
-// Middleware per generare nonce
-app.use((req, res, next) => {
-    res.locals.nonce = crypto.randomBytes(16).toString('hex');
-    next();
-});
-
-// Configura helmet con direttive CSP personalizzate
-app.use(helmet({
-    contentSecurityPolicy: {
-        useDefaults: true,
-        directives: {
-            "default-src": ["'self'"],
-            "script-src": ["'self'", "https://cdn.socket.io", (req, res) => `'nonce-${res.locals.nonce}'`, "'unsafe-inline'"],
-            "style-src": ["'self'", "'unsafe-inline'"],
-            "font-src": ["'self'", "https://fonts.gstatic.com"]
-        }
-    }
-}));
-
-// Configura il server per servire file statici
+app.use(helmet());
 app.use(express.static(path.join(__dirname, 'public')));
-
-// Servi l'index.html quando si accede alla root
-app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'public', 'index.html'));
-});
 
 app.get('/check-image', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'instagram-logo.svg'));
@@ -75,7 +50,7 @@ app.get('/check-image', (req, res) => {
 io.on('connection', (socket) => {
     socket.on('register', (username) => {
         if (disconnectedUsers.has(username) && (connectedUser || isAdminConnected)) {
-            socket.emit('connectionStatus', 'blocked'); // Blocca l'utente disconnesso se qualcuno è connesso
+            socket.emit('connectionStatus', 'blocked');
             return;
         }
 
@@ -90,7 +65,7 @@ io.on('connection', (socket) => {
                     io.to(connectedUser.id).emit('connectionStatus', 'connected');
                 }
             } else {
-                socket.emit('connectionStatus', 'full'); // Admin già connesso
+                socket.emit('connectionStatus', 'full');
             }
         } else {
             if (!connectedUser) {
@@ -98,10 +73,10 @@ io.on('connection', (socket) => {
                 connectedUser = socket;
                 socket.emit('connectionStatus', isAdminConnected ? 'connected' : 'waiting');
                 io.emit('chat message', { user: 'Sistema', text: `${username} è in attesa di un ascolto amico.` });
-                sendNotificationEmail(username); // Invia la notifica via email
+                sendNotificationEmail(username);
             } else {
                 waitingList.push(socket);
-                socket.emit('connectionStatus', 'waiting'); // Utente in attesa
+                socket.emit('connectionStatus', 'waiting');
             }
         }
     });
@@ -123,11 +98,11 @@ io.on('connection', (socket) => {
                 isAdminConnected = false;
                 io.emit('chat message', { user: 'Chat', text: 'Un ascolto amico è uscito dalla chat.' });
                 if (connectedUser) {
-                    io.to(connectedUser.id).emit('connectionStatus', 'waiting'); // Metti l'utente in attesa
+                    io.to(connectedUser.id).emit('connectionStatus', 'waiting');
                 }
             } else {
                 io.emit('userDisconnected', `${socket.username} si è disconnesso`);
-                disconnectedUsers.add(socket.username);  // Aggiungi il nome utente disconnesso al set
+                disconnectedUsers.add(socket.username);
                 if (connectedUser && connectedUser.id === socket.id) {
                     connectedUser = null;
                     processNextUserInQueue();
@@ -147,22 +122,19 @@ io.on('connection', (socket) => {
     };
 
     const disconnectAllUsersExceptAdmin = () => {
-        // Disconnetti l'utente connesso
         if (connectedUser) {
             io.to(connectedUser.id).emit('redirectToWaiting');
             io.emit('userDisconnected', `${connectedUser.username} si è disconnesso`);
-            disconnectedUsers.add(connectedUser.username);  // Aggiungi il nome utente disconnesso al set
+            disconnectedUsers.add(connectedUser.username);
             connectedUser.disconnect(true);
             connectedUser = null;
         }
-        // Disconnetti gli utenti in lista d'attesa
         waitingList.forEach(user => {
             io.to(user.id).emit('redirectToWaiting');
-            disconnectedUsers.add(user.username);  // Aggiungi il nome utente disconnesso al set
+            disconnectedUsers.add(user.username);
             user.disconnect(true);
         });
         waitingList = [];
-        // Non disconnettiamo l'amministratore
         io.emit('chat message', { user: 'Sistema', text: 'Tutti gli utenti sono stati disconnessi.' });
     };
 });
