@@ -4,6 +4,7 @@ const socketIo = require('socket.io');
 const path = require('path');
 const helmet = require('helmet');
 const nodemailer = require('nodemailer');
+const crypto = require('crypto');
 
 const app = express();
 const server = http.createServer(app);
@@ -40,18 +41,32 @@ const sendNotificationEmail = (username) => {
     });
 };
 
+// Middleware per generare nonce
+app.use((req, res, next) => {
+    res.locals.nonce = crypto.randomBytes(16).toString('hex');
+    next();
+});
+
 // Configura helmet con direttive CSP personalizzate
 app.use(helmet({
     contentSecurityPolicy: {
         useDefaults: true,
         directives: {
-            "script-src": ["'self'", "https://cdn.socket.io"],
-            "connect-src": ["'self'", "https://cdn.socket.io"]
+            "default-src": ["'self'"],
+            "script-src": ["'self'", "https://cdn.socket.io", (req, res) => `'nonce-${res.locals.nonce}'`],
+            "style-src": ["'self'", "'unsafe-inline'"],
+            "font-src": ["'self'", "https://fonts.gstatic.com"]
         }
     }
 }));
 
+// Configura il server per servire file statici
 app.use(express.static(path.join(__dirname, 'public')));
+
+// Servi l'index.html quando si accede alla root
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'index.html'));
+});
 
 app.get('/check-image', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'instagram-logo.svg'));
