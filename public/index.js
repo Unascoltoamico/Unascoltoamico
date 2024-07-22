@@ -52,7 +52,10 @@ app.use(helmet({
     contentSecurityPolicy: {
         useDefaults: true,
         directives: {
-            "script-src": ["'self'", "https://cdn.socket.io", (req, res) => `'nonce-${res.locals.nonce}'`]
+            "default-src": ["'self'"],
+            "script-src": ["'self'", "https://cdn.socket.io", (req, res) => `'nonce-${res.locals.nonce}'`],
+            "style-src": ["'self'", "'unsafe-inline'"],
+            "font-src": ["'self'", "https://fonts.gstatic.com"]
         }
     }
 }));
