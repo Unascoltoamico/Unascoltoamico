@@ -45,7 +45,8 @@ app.use(helmet({
     contentSecurityPolicy: {
         useDefaults: true,
         directives: {
-            "script-src": ["'self'", "https://cdn.socket.io"]
+            "script-src": ["'self'", "https://cdn.socket.io"],
+            "connect-src": ["'self'", "https://cdn.socket.io"]
         }
     }
 }));
