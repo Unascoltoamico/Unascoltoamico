@@ -1,13 +1,19 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <script src="/socket.io/socket.io.js"></script>
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>La chat di un ascolto amico</title>
     <link rel="stylesheet" href="style.css">
-    <script src="https://cdn.socket.io/4.0.1/socket.io.min.js"></script>
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.socket.io; style-src 'self' 'unsafe-inline'; font-src 'self' https://fonts.gstatic.com;">
-    <link rel="preload" href="https://fonts.gstatic.com/s/leaguespartan/v1/kLIjGbM0a0A0jWay_m89jTw.ttf" as="font" type="font/ttf" crossorigin="anonymous">
+    <meta http-equiv="Content-Security-Policy" content="
+    default-src 'self'; 
+    script-src 'self' 'unsafe-inline' https://cdn.socket.io; 
+    style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; 
+    font-src 'self' https://fonts.gstatic.com;">    
+
+    ">    
 </head>
 <body>
     <div id="landing-page">
