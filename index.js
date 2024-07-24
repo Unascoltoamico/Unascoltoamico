@@ -41,10 +41,10 @@ const sendNotificationEmail = (username) => {
 };
 
 app.use(helmet());
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname)));
 
-app.get('/check-image', (req, res) => {
-    res.sendFile(path.join(__dirname, 'public', 'Progetto senza titolo.svg'));
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, 'index.html'));
 });
 
 io.on('connection', (socket) => {
