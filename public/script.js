@@ -1,4 +1,4 @@
-const socket = io();
+const socket = io(); // Assicurati che questa linea sia corretta e che `io` punti al server corretto
 
 const landingPage = document.getElementById('landing-page');
 const enterChatButton = document.getElementById('enter-chat-button');
