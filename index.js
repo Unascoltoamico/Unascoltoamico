@@ -7,7 +7,9 @@ const nodemailer = require('nodemailer');
 
 const app = express();
 const server = http.createServer(app);
-const io = socketIo(server);
+const io = socketIo(server, {
+  path: '/socket.io'
+});
 
 let connectedUser = null;
 let isAdminConnected = false;
