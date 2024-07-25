@@ -40,6 +40,15 @@ const sendNotificationEmail = (username) => {
     });
 };
 
+// Middleware per bloccare le richieste ai font di Google
+app.use((req, res, next) => {
+    if (req.url.includes('gstatic') || req.url.includes('googleapis')) {
+        res.status(403).send('Blocked');
+    } else {
+        next();
+    }
+});
+
 app.use(helmet());
 app.use(express.static(path.join(__dirname, 'public')));
 
