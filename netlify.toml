@@ -1,0 +1,8 @@
+[build]
+  functions = "netlify/functions"
+
+[[redirects]]
+  from = "/socket.io/*"
+  to = "/.netlify/functions/socket"
+  status = 200
+  force = true
