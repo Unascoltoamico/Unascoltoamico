@@ -18,15 +18,15 @@ let disconnectedUsers = new Set();
 const transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
-        user: 'ascoltologin@gmail.com', // Cambia con il tuo indirizzo email
-        pass: 'vdye yosy aibt uwdn' // Cambia con la tua password per l'applicazione
+        user: process.env.EMAIL_USER, // Cambia con la tua variabile d'ambiente
+        pass: process.env.EMAIL_PASS // Cambia con la tua variabile d'ambiente
     }
 });
 
 const sendNotificationEmail = (username) => {
     const mailOptions = {
-        from: 'ascoltologin@gmail.com', // Cambia con il tuo indirizzo email
-        to: 'ascoltologin@gmail.com', // Cambia con l'indirizzo email del destinatario
+        from: process.env.EMAIL_USER, // Cambia con la tua variabile d'ambiente
+        to: process.env.EMAIL_USER, // Cambia con l'indirizzo email del destinatario
         subject: 'Nuovo login utente',
         text: `${username} ha effettuato il login`
     };
